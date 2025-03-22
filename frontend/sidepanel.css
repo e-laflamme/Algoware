@@ -1,3 +1,6 @@
+:root {
+    --main-bg-color: #F0EFED;
+}
 
 * {
     margin: 0;
@@ -7,7 +10,7 @@
 }
 
 .data {
-    background-color: #f9fafb;
+    background-color: var(--main-bg-color);
     display: flex;
     align-content: center;
     justify-content: start;
@@ -24,8 +27,8 @@
     }
 }
 
-.sentiment-card {
-    background-color: white;
+/* Breakdown Card Styles */
+.card-gen {
     border-radius: 16px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     width: 100%;
@@ -34,6 +37,24 @@
     border: 1px solid rgba(0, 0, 0, 0.05);
     transform: translateY(0);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 2%;
+}
+
+.sentiment-card {
+    background-color: white;
+}
+
+.top-card {
+    padding-bottom: 14px;
+    .topic-pill {
+        background-color: rgba(46, 67, 151, 0.07);
+    }
+}
+.top-card.odd {
+    background-color: #E0ECE7;
+}
+.top-card.even {
+    background-color: #d9e5ea;
 }
 
 .card-header {
@@ -135,6 +156,7 @@
     }
 }
 
+/* Main Styles */
 .outfit-flearth {
     font-family: "Rubik", sans-serif;
     font-optical-sizing: auto;
@@ -144,7 +166,7 @@
 body {
     font-family: "Rubik", sans-serif;
     color: #35352D;
-    background-color: #F5F5EF;
+    background-color: var(--main-bg-color);
 }
 
 #logo {
@@ -216,5 +238,12 @@ button.tablinks {
     display: none;
     border-top: none;
     align-content: flex-start;
-    background-color: #F5F5EF;
+    background-color: var(--main-bg-color);
 }
+
+
+#cur_breakdown, #cur_top{
+    width: 100%;
+}
+
+

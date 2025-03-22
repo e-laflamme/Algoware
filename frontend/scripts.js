@@ -13,13 +13,13 @@ const MainTab = "cur_rec_data";
 
 //------------------------------ PLACEHOLDER DATA ----------------------------
 
-
-
-const data = [
-    {title: "Topic 1", percent: 25},
-    {title: "Topic 2", percent: 50},
-    {title: "Topic 3", percent: 75}
-];
+const topData = [
+    {topic: "Climate Change", num_hits: 234},
+    {topic: "Sports", num_hits: 189},
+    {topic: "TV and Movies", num_hits: 136},
+    {topic: "Finance", num_hits: 89},
+    {topic: "Politics", num_hits: 37},
+]
 
 const sentimentData = [
     {   topic: "Climate Change",
@@ -50,52 +50,83 @@ const sentimentData = [
 ]
 
 ;
-//----------------------------------------------------------------------------
-const container = document.querySelector('#cur_rec_data');
-
-sentimentData.forEach(item => {
-    const div = document.createElement('div');
-    div.classList.add('sentiment-card');
-
-    const header = document.createElement('div');
-    header.classList.add('card-header');
-
-    const topic_pill = document.createElement('div');
-    topic_pill.classList.add('topic-pill');
-    topic_pill.innerHTML = `${item.topic}`;
-
-    const timeframe = document.createElement('div');
-    timeframe.classList.add('timeframe');
-    timeframe.innerHTML = `${item.timeframe}`;
-
-    header.appendChild(topic_pill)
-    header.appendChild(timeframe)
-
-    const content = document.createElement('div');
-    content.classList.add('card-content');
-
-    const chart_cont = document.createElement('div');
-    chart_cont.classList.add('chart-container');
-    chart_cont.id = "donutChart"
-
-    const legend = document.createElement('div');
-    legend.classList.add('legend');
-
-    content.appendChild(chart_cont)
-    content.appendChild(legend)
-
-    div.appendChild(header);
-    div.appendChild(content);
-    container.appendChild(div);
-
-    createDonutChart(item, chart_cont);
-    createLegend(item, legend);
-});
-
+//-------------------------- TOP CONTENT --------------------------------
 document.addEventListener('DOMContentLoaded', function () {
+    const container = document.querySelector('#cur_top');
+    var count = 1;
+    topData.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('card-gen', 'top-card');
+        if (count % 2 !== 0) {
+            div.classList.add('odd');
+        } else {
+            div.classList.add('even');
+        }
 
+        const header = document.createElement('div');
+        header.classList.add('card-header');
+
+        const topic_pill = document.createElement('div');
+        topic_pill.classList.add('topic-pill');
+        topic_pill.innerHTML = `${item.topic}`;
+
+        const num_hits = document.createElement('div');
+        num_hits.classList.add('timeframe');
+        num_hits.innerHTML = `${item.num_hits}`;
+
+        header.appendChild(topic_pill)
+        header.appendChild(num_hits)
+
+        div.appendChild(header);
+        container.appendChild(div);
+
+        count++
+    });
 });
+//--------------------------- BREAKDOWN --------------------------------
+// TO CREATE THE CONTENT BREAKDOWN CARDS
+document.addEventListener('DOMContentLoaded', function () {
+    const container = document.querySelector('#cur_breakdown');
+    sentimentData.forEach(item => {
+        const div = document.createElement('div');
+        div.classList.add('card-gen', 'sentiment-card');
 
+        const header = document.createElement('div');
+        header.classList.add('card-header');
+
+        const topic_pill = document.createElement('div');
+        topic_pill.classList.add('topic-pill');
+        topic_pill.innerHTML = `${item.topic}`;
+
+        const timeframe = document.createElement('div');
+        timeframe.classList.add('timeframe');
+        timeframe.innerHTML = `${item.timeframe}`;
+
+        header.appendChild(topic_pill)
+        header.appendChild(timeframe)
+
+        const content = document.createElement('div');
+        content.classList.add('card-content');
+
+        const chart_cont = document.createElement('div');
+        chart_cont.classList.add('chart-container');
+        chart_cont.id = "donutChart"
+
+        const legend = document.createElement('div');
+        legend.classList.add('legend');
+
+        content.appendChild(chart_cont)
+        content.appendChild(legend)
+
+        div.appendChild(header);
+        div.appendChild(content);
+        container.appendChild(div);
+
+        createDonutChart(item, chart_cont);
+        createLegend(item, legend);
+    });
+});
+// HELPER FUNCTIONS
 function createDonutChart(item, container) {
     const chartContainer = container;
 
@@ -105,6 +136,7 @@ function createDonutChart(item, container) {
     const centerX = size / 2;
     const centerY = size / 2;
     const radius = size / 2 - thickness / 2;
+    const gapAngle = 0.03; // Small gap between segments (in radians)
 
     // Create SVG element
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -116,7 +148,9 @@ function createDonutChart(item, container) {
 
     // Create donut segments
     item.sentiments.forEach((item, index) => {
-        const endAngle = startAngle + (item.percentage / 100) * 2 * Math.PI;
+        // Calculate the angle for this segment (minus the gap)
+        const segmentAngle = (item.percentage / 100) * 2 * Math.PI - gapAngle;
+        const endAngle = startAngle + segmentAngle;
 
         // Calculate path coordinates
         const startX = centerX + radius * Math.cos(startAngle);
@@ -156,8 +190,8 @@ function createDonutChart(item, container) {
             path.style.transform = "scale(1)";
         }, 100 * index);
 
-        // Update start angle for next segment
-        startAngle = endAngle;
+        // Update start angle for next segment (adding the gap)
+        startAngle = endAngle + gapAngle;
     });
 
     chartContainer.appendChild(svg);
