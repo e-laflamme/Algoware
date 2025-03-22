@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "YouTube Title Scraper",
+  "name": "Algoware",
   "version": "1.0",
-  "description": "Extracts YouTube homepage video titles",
-  "permissions": ["activeTab", "scripting"],
+  "description": "Aware of the algorithm", 
+  "permissions": ["activeTab", "scripting", "sidePanel"],
   "host_permissions": ["https://www.youtube.com/"],
   "background": {
     "service_worker": "background.js"
@@ -13,5 +13,13 @@
       "matches": ["https://www.youtube.com/"],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "icons": {
+    "16": "monitor.png",
+    "48": "monitor.png",
+    "128": "monitor.png"
+  }
 }
