@@ -6,20 +6,20 @@
   "permissions": ["activeTab", "scripting", "sidePanel"],
   "host_permissions": ["https://www.youtube.com/"],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "frontend/background.js"
   },
   "content_scripts": [
     {
       "matches": ["https://www.youtube.com/"],
-      "js": ["content.js"]
+      "js": ["frontend/content.js"]
     }
   ],
   "side_panel": {
-    "default_path": "sidepanel.html"
+    "default_path": "frontend/sidepanel.html"
   },
   "icons": {
-    "16": "monitor.png",
-    "48": "monitor.png",
-    "128": "monitor.png"
+    "16": "frontend/monitor.png",
+    "48": "frontend/monitor.png",
+    "128": "frontend/monitor.png"
   }
 }
