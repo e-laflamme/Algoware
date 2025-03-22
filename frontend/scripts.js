@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const num_hits = document.createElement('div');
         num_hits.classList.add('timeframe');
-        num_hits.innerHTML = `${item.num_hits}`;
+        num_hits.innerHTML = `${item.num_hits} videos`;
 
         header.appendChild(topic_pill)
         header.appendChild(num_hits)
