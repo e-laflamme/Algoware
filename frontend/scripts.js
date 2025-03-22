@@ -1,20 +1,53 @@
+/**
+ * Enum for common colors.
+ * @readonly
+ * @enum {{name: string, hex: string}}
+ */
+const Colors = Object.freeze({
+    POSITIVE:   { name: "positive", color: "#B8E6D0" },
+    NEGATIVE:  { name: "negative", color: "#F9C6C6" },
+    NEUTRAL: { name: "neutral", color: "#D8E6F3" }
+});
+
+const MainTab = "cur_rec_data";
+
 //------------------------------ PLACEHOLDER DATA ----------------------------
+
+
+
 const data = [
     {title: "Topic 1", percent: 25},
     {title: "Topic 2", percent: 50},
     {title: "Topic 3", percent: 75}
 ];
 
-const sentimentData =
-    [{
-        topic: "Climate Change",
-        timeframe: "Last 60 days",
+const sentimentData = [
+    {   topic: "Climate Change",
+        timeframe: "**Last 2 days",
         sentiments: [
-            {sentiment: "Supporting", percentage: 70, color: "#B8E6D0"},
-            {sentiment: "Against", percentage: 20, color: "#F9C6C6"},
+            {sentiment: "Positive", percentage: 10, color: "#B8E6D0"},
+            {sentiment: "Negative", percentage: 80, color: "#F9C6C6"},
             {sentiment: "Neutral", percentage: 10, color: "#D8E6F3"}
-        ]
-    }]
+        ]},
+        {  topic: "Sports",
+            timeframe: "**Last 2 days",
+            sentiments: [
+                {sentiment: "Positive", percentage: 60, color: "#B8E6D0"},
+                {sentiment: "Negative", percentage: 30, color: "#F9C6C6"},
+                {sentiment: "Neutral", percentage: 10, color: "#D8E6F3"}
+            ]
+        },
+        {  topic: "TV and Movies",
+            timeframe: "**Last 2 days",
+            sentiments: [
+                {sentiment: "Positive", percentage: 70, color: "#B8E6D0"},
+                {sentiment: "Negative", percentage: 10, color: "#F9C6C6"},
+                {sentiment: "Neutral", percentage: 20, color: "#D8E6F3"}
+            ]
+        }
+
+
+]
 
 ;
 //----------------------------------------------------------------------------
@@ -168,6 +201,10 @@ document.addEventListener("DOMContentLoaded", function () {
             var tabName = this.getAttribute("data-tab"); // Get tab id from data attribute
             openTab(event, tabName);
         });
+        if (button.getAttribute("data-tab") === MainTab) {
+            document.querySelector("#cur_rec_data").style.display = "flex";
+            button.classList.add("active");
+        }
     });
 });
 
