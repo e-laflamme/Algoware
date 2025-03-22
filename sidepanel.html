@@ -10,13 +10,21 @@
   <body>
     <div id="title-section"><img src="monitor.png" id="logo"><h2 id="title">Algoware</h2></div>
     <div id="statistics">
-        <h3 id="subtitle">Content Analysis</h3>
-        <div class="data">
-
+    <div class="tab">
+      <button class="tablinks" data-tab="cur_rec_data">Recent Recommendations</button>
+      <button class="tablinks" data-tab="history_data">History & Trends</button>
+    </div>
+      <div class="data tabcontent" id="cur_rec_data">
+          <h3 class="subtitle">Content Analysis</h3>
+            <!-- Current Data Loaded in Here -->
         </div>
+      <div class="data tabcontent" id="history_data">
+        <h3 class="subtitle">Long-Term Trends</h3>
+        <!-- Current Data Loaded in Here -->
+      </div>
 
     </div>
-    
+
   </body>
   <!--Attribution-->
   <a style="color: transparent;" href="https://www.flaticon.com/free-icons/view" title="view icons">View icons created by Freepik - Flaticon</a>

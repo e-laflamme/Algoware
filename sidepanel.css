@@ -1,3 +1,136 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.data {
+    background-color: #f9fafb;
+    display: flex;
+    align-content: center;
+    justify-content: start;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px;
+    .subtitle {
+
+    }
+}
+
+.sentiment-card {
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-header {
+    padding: 24px 24px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.topic-pill {
+    background-color: #f3f4f6;
+    border-radius: 9999px;
+    padding: 8px 16px;
+    font-weight: 500;
+    color: #374151;
+    font-size: 15px;
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.timeframe {
+    color: #6b7280;
+    font-size: 14px;
+    animation: fadeIn 0.6s 0.2s ease-out both;
+}
+
+.card-content {
+    padding: 0 24px 24px;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.chart-container {
+    width: 160px;
+    height: 160px;
+    position: relative;
+    animation: scaleIn 0.6s 0.3s ease-out both;
+}
+
+.legend {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: slideInUp 0.5s ease-out both;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-label {
+    font-weight: 500;
+    color: #374151;
+    font-size: 15px;
+}
+
+.legend-value {
+    color: #4b5563;
+    font-size: 15px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
 .outfit-flearth {
     font-family: "Outfit", sans-serif;
     font-optical-sizing: auto;
@@ -12,24 +145,8 @@ body {
     color: #35352D;
 }
 
-h3 {
-    font-size: 24px;
-}
-
-.topics {
-    margin: 2%;
-}
-
 #logo {
     height: 10vh;
-}
-
-#title {
-    margin-block: 0px;
-}
-
-#subtitle {
-    /*padding-block: 5vh;*/
 }
 
 #title-section {
@@ -44,29 +161,46 @@ h3 {
     gap: 10px;
 }
 
-.item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
+/* TAB STYLES */
 
-.title {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.percent-box {
-    width: 4em;
-    height: 4em;
-    font-size: 5em;
-    background-color: #BEE1D1; 
-    color: white;
+.tab {
+    overflow: hidden;
+    background-color: #DCECF1;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
+    padding: 0.3em;
     border-radius: 5px;
-    margin: 0px;
 }
 
+/* Style the buttons that are used to open the tab content */
+.tab button {
+    cursor: pointer;
+    padding: 0.5em;
+    transition: 0.3s;
+    background-color: #DCECF1;
+    border: none;
+    border-radius: 5px;
+    width: 50%;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #d1e4e8;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #fff;
+}
+
+button.tablinks {
+    border: none;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border-top: none;
+    background: #ECEDF0;
+    align-content: flex-start;
+}

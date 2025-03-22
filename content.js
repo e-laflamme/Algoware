@@ -7,18 +7,15 @@ function extractVideoUrls() {
     }
 
     let urls = [...videoLinks].map(el => {
-        let anchor = el.closest('a'); // Find the closest anchor tag
-        if (anchor) {
-            return anchor.href; // Return the href attribute (the URL)
-        } else {
-            return null; // Return null if no parent anchor tag is found
-        }
-    }).filter(url => url !== null); //remove nulls from array
+        let anchor = el.closest('a');
+        return anchor ? anchor.href : null;
+    }).filter(url => url !== null); // Remove nulls
 
     console.log("YouTube Homepage Video URLs:", urls);
+
 }
 
 window.addEventListener("load", () => {
     console.log("YouTube page loaded, extracting URLs...");
-    setTimeout(extractVideoUrls, 2000); // Delay to allow dynamic loading
+    setTimeout(extractVideoUrls, 2000);
 });

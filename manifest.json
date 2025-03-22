@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Algoware",
   "version": "1.0",
-  "description": "Aware of the algorithm", 
+  "description": "Your content transparency companion",
   "permissions": ["activeTab", "scripting", "sidePanel"],
   "host_permissions": ["https://www.youtube.com/"],
   "background": {
