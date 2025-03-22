@@ -272,7 +272,7 @@ function openTab(evt, tabName) {
 
 
 
-
+/*
 // JS TEST SCRIPT FOR FLASK MODEL PREDICTION
 document.addEventListener("DOMContentLoaded", function () {
     const predictButton = document.querySelector("#predictButton");
@@ -303,5 +303,5 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-});
+}); */
 
