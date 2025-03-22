@@ -193,3 +193,44 @@ function openTab(evt, tabName) {
     tabElement.style.display = "flex";
     evt.currentTarget.classList.add("active");
 }
+
+
+
+
+
+
+
+
+
+// JS TEST SCRIPT FOR FLASK MODEL PREDICTION
+document.addEventListener("DOMContentLoaded", function () {
+    const predictButton = document.querySelector("#predictButton");
+    const resultDiv = document.querySelector("#result");
+
+    if (predictButton && resultDiv) {
+        predictButton.addEventListener("click", async function () {
+            const inputValue = document.querySelector("#inputValue").value;
+
+            try {
+                const response = await fetch("http://127.0.0.1:5000/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ input: inputValue })
+                });
+
+                const data = await response.json();
+
+                // Display the prediction result
+                if (data.prediction) {
+                    resultDiv.innerText = `Prediction: ${data.prediction}`;
+                } else {
+                    resultDiv.innerText = "Error getting prediction.";
+                }
+            } catch (error) {
+                console.error("Error fetching prediction:", error);
+                resultDiv.innerText = "Error getting prediction.";
+            }
+        });
+    }
+});
+

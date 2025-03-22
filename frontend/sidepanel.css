@@ -203,4 +203,14 @@ button.tablinks {
     border-top: none;
     background: #ECEDF0;
     align-content: flex-start;
+    border-radius: 5px;
+}
+
+
+
+
+@media (max-width: 460px) {
+    .card-content {
+        flex-direction: column; 
+    }
 }
