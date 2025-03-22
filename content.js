@@ -1,16 +1,24 @@
-function extractTitles() {
-    let videoElements = document.querySelectorAll("#video-title");
-    if (videoElements.length === 0) {
-        console.log("No videos found yet, retrying...");
-        setTimeout(extractTitles, 2000);  // Try again in 2 seconds
+function extractVideoUrls() {
+    let videoLinks = document.querySelectorAll("#video-title");
+    if (videoLinks.length === 0) {
+        console.log("No video links found yet, retrying...");
+        setTimeout(extractVideoUrls, 2000);  // Try again in 2 seconds
         return;
     }
 
-    let titles = [...videoElements].map(el => el.innerText.trim());
-    console.log("YouTube Homepage Titles:", titles);
+    let urls = [...videoLinks].map(el => {
+        let anchor = el.closest('a'); // Find the closest anchor tag
+        if (anchor) {
+            return anchor.href; // Return the href attribute (the URL)
+        } else {
+            return null; // Return null if no parent anchor tag is found
+        }
+    }).filter(url => url !== null); //remove nulls from array
+
+    console.log("YouTube Homepage Video URLs:", urls);
 }
 
 window.addEventListener("load", () => {
-    console.log("YouTube page loaded, extracting titles...");
-    setTimeout(extractTitles, 2000); // Delay to allow dynamic loading
+    console.log("YouTube page loaded, extracting URLs...");
+    setTimeout(extractVideoUrls, 2000); // Delay to allow dynamic loading
 });
