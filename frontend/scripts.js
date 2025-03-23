@@ -55,10 +55,11 @@ const sentimentData = [
 
 //-------------------------- TOP CONTENT --------------------------------
 // Function to retrieve stored computations from chrome.storage
-function getComputationsPromise() {
+// Function to retrieve topicCounts from chrome.storage
+function getTopicCountsPromise() {
     return new Promise((resolve) => {
-        chrome.storage.sync.get({ computations: [] }, function (result) {
-            resolve(result.computations || []);
+        chrome.storage.sync.get({ topicCounts: {} }, function (result) {
+            resolve(result.topicCounts || {}); // Ensuring we always return an object
         });
     });
 }
@@ -67,20 +68,20 @@ function getComputationsPromise() {
 document.addEventListener('DOMContentLoaded', async function () {
     const container = document.querySelector('#cur_top');
 
-    // Retrieve computations asynchronously
-    let rawTopData = await getComputationsPromise();
+    // Retrieve topic counts asynchronously
+    let topicCounts = await getTopicCountsPromise();
 
     // Handle case where no data is found
-    if (!rawTopData || rawTopData.length === 0) {
-        console.log("No data available.");
+    if (!topicCounts || Object.keys(topicCounts).length === 0) {
+        console.log("No topic count data available.");
         return; // Stop execution if no data
     }
 
-    console.log("Retrieved computations:", rawTopData); // Debugging
+    console.log("Retrieved topic counts:", topicCounts); // Debugging
 
     let count = 1;
 
-    rawTopData.forEach(item => {
+    Object.entries(topicCounts).forEach(([topic, num_hits]) => {
         // Create the main card container
         const div = document.createElement('div');
         div.classList.add('card-gen', 'top-card');
@@ -93,22 +94,23 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Create topic pill element
         const topic_pill = document.createElement('div');
         topic_pill.classList.add('topic-pill');
-        topic_pill.innerHTML = `${item.topic}`;
+        topic_pill.innerHTML = `${topic}`; // Use topic as the title
 
         // Create number of hits element
-        const num_hits = document.createElement('div');
-        num_hits.classList.add('timeframe');
-        num_hits.innerHTML = `${item.num_hits} of videos`;
+        const num_hits_elem = document.createElement('div');
+        num_hits_elem.classList.add('timeframe');
+        num_hits_elem.innerHTML = `${num_hits} videos`; // Use num_hits as count
 
         // Append elements together
         header.appendChild(topic_pill);
-        header.appendChild(num_hits);
+        header.appendChild(num_hits_elem);
         div.appendChild(header);
         container.appendChild(div);
 
         count++;
     });
 });
+
 
 //--------------------------- BREAKDOWN --------------------------------
 // TO CREATE THE CONTENT BREAKDOWN CARDS
