@@ -20,9 +20,6 @@ const topData = [
     {topic: "Finance", num_hits: 89},
     {topic: "Politics", num_hits: 37},
 ]
-
-
-
 const sentimentData = [
     {   topic: "Climate Change",
         timeframe: "**Last 2 days",
@@ -52,9 +49,6 @@ const sentimentData = [
 ];
 
 // ------------------------ REAL DATA -----------------
-
-//-------------------------- TOP CONTENT --------------------------------
-// Function to retrieve stored computations from chrome.storage
 // Function to retrieve topicCounts from chrome.storage
 function getTopicCountsPromise() {
     return new Promise((resolve) => {
@@ -64,9 +58,69 @@ function getTopicCountsPromise() {
     });
 }
 
+let currSessionResults = {}; // Initialize the variable
+
+// ------------------------- SESSION CONTENT ------------------------
+// Listen for the message from contents.js
+let currSessionResults = {}; // Initialize the variable
+
+// Listen for the message from contents.js
+chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "updateSessionResults") {
+        currSessionResults = message.data; // Update the variable with the new result
+        console.log("Current Session Results updated:", currSessionResults);
+
+        // Select the container for the new data
+        const container = document.querySelector('#cur_top');
+
+        // Clear the container to avoid appending duplicate content
+        container.innerHTML = '';
+
+        // Check if there's any data to display
+        if (!currSessionResults || Object.keys(currSessionResults).length === 0) {
+            console.log("No data available.");
+            return; // Stop execution if no data
+        }
+
+        let count = 1;
+
+        // Loop through the results and create elements dynamically
+        Object.entries(currSessionResults).forEach(([topic, num_hits]) => {
+            // Create the main card container
+            const div = document.createElement('div');
+            div.classList.add('card-gen', 'top-card');
+            div.classList.add(count % 2 !== 0 ? 'odd' : 'even'); // Apply odd/even classes
+
+            // Create the header section
+            const header = document.createElement('div');
+            header.classList.add('card-header');
+
+            // Create the topic pill element
+            const topic_pill = document.createElement('div');
+            topic_pill.classList.add('topic-pill');
+            topic_pill.innerHTML = `${topic}`; // Topic as title
+
+            // Create the number of hits element
+            const num_hits_elem = document.createElement('div');
+            num_hits_elem.classList.add('timeframe');
+            num_hits_elem.innerHTML = `${num_hits} videos`; // Number of hits as count
+
+            // Append elements together
+            header.appendChild(topic_pill);
+            header.appendChild(num_hits_elem);
+            div.appendChild(header);
+            container.appendChild(div);
+
+            count++;
+        });
+    }
+});
+
+//-------------------------- TOP CONTENT --------------------------------
+
 // Wait until the DOM is fully loaded before executing
 document.addEventListener('DOMContentLoaded', async function () {
-    const container = document.querySelector('#cur_top');
+    const container = document.querySelector('#his_top');
 
     // Retrieve topic counts asynchronously
     let topicCounts = await getTopicCountsPromise();
@@ -76,8 +130,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         console.log("No topic count data available.");
         return; // Stop execution if no data
     }
-
-    console.log("Retrieved topic counts:", topicCounts); // Debugging
 
     let count = 1;
 

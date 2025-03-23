@@ -242,7 +242,7 @@ button.tablinks {
 }
 
 
-#cur_breakdown, #cur_top{
+#cur_breakdown, #cur_top, #his_top {
     width: 100%;
 }
 

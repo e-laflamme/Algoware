@@ -16,6 +16,11 @@ function isYouTubeHomepage() {
   chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "predictionResult") {
       const result = message.data;
+        // Send the result to the script.js through message
+        chrome.runtime.sendMessage({
+            action: "updateSessionResults",
+            data: result
+        });
       console.log("📊 Topic Predictions:", result);
       updateLocalCounts(result);
     }
