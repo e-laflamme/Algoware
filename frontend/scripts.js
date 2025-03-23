@@ -22,14 +22,14 @@ const topData = [
 ]
 const sentimentData = [
     {   topic: "Climate Change",
-        timeframe: "**Last 2 days",
+        timeframe: "*Last 2 days",
         sentiments: [
             {sentiment: "Positive", percentage: 10, color: "#B8E6D0"},
             {sentiment: "Negative", percentage: 80, color: "#F9C6C6"},
             {sentiment: "Neutral", percentage: 10, color: "#D8E6F3"}
         ]},
         {  topic: "Sports",
-            timeframe: "**Last 2 days",
+            timeframe: "*Last 2 days",
             sentiments: [
                 {sentiment: "Positive", percentage: 60, color: "#B8E6D0"},
                 {sentiment: "Negative", percentage: 30, color: "#F9C6C6"},
@@ -37,7 +37,7 @@ const sentimentData = [
             ]
         },
         {  topic: "TV and Movies",
-            timeframe: "**Last 2 days",
+            timeframe: "*Last 2 days",
             sentiments: [
                 {sentiment: "Positive", percentage: 70, color: "#B8E6D0"},
                 {sentiment: "Negative", percentage: 10, color: "#F9C6C6"},
