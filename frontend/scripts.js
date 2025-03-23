@@ -21,6 +21,8 @@ const topData = [
     {topic: "Politics", num_hits: 37},
 ]
 
+
+
 const sentimentData = [
     {   topic: "Climate Change",
         timeframe: "**Last 2 days",
@@ -47,42 +49,67 @@ const sentimentData = [
         }
 
 
-]
+];
 
-;
+// ------------------------ REAL DATA -----------------
+
 //-------------------------- TOP CONTENT --------------------------------
-document.addEventListener('DOMContentLoaded', function () {
+// Function to retrieve stored computations from chrome.storage
+function getComputationsPromise() {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get({ computations: [] }, function (result) {
+            resolve(result.computations || []);
+        });
+    });
+}
+
+// Wait until the DOM is fully loaded before executing
+document.addEventListener('DOMContentLoaded', async function () {
     const container = document.querySelector('#cur_top');
-    var count = 1;
-    topData.forEach(item => {
+
+    // Retrieve computations asynchronously
+    let rawTopData = await getComputationsPromise();
+
+    // Handle case where no data is found
+    if (!rawTopData || rawTopData.length === 0) {
+        console.log("No data available.");
+        return; // Stop execution if no data
+    }
+
+    console.log("Retrieved computations:", rawTopData); // Debugging
+
+    let count = 1;
+
+    rawTopData.forEach(item => {
+        // Create the main card container
         const div = document.createElement('div');
         div.classList.add('card-gen', 'top-card');
-        if (count % 2 !== 0) {
-            div.classList.add('odd');
-        } else {
-            div.classList.add('even');
-        }
+        div.classList.add(count % 2 !== 0 ? 'odd' : 'even');
 
+        // Create the header section
         const header = document.createElement('div');
         header.classList.add('card-header');
 
+        // Create topic pill element
         const topic_pill = document.createElement('div');
         topic_pill.classList.add('topic-pill');
         topic_pill.innerHTML = `${item.topic}`;
 
+        // Create number of hits element
         const num_hits = document.createElement('div');
         num_hits.classList.add('timeframe');
         num_hits.innerHTML = `${item.num_hits} of videos`;
 
-        header.appendChild(topic_pill)
-        header.appendChild(num_hits)
-
+        // Append elements together
+        header.appendChild(topic_pill);
+        header.appendChild(num_hits);
         div.appendChild(header);
         container.appendChild(div);
 
-        count++
+        count++;
     });
 });
+
 //--------------------------- BREAKDOWN --------------------------------
 // TO CREATE THE CONTENT BREAKDOWN CARDS
 document.addEventListener('DOMContentLoaded', function () {
