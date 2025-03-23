@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const num_hits = document.createElement('div');
         num_hits.classList.add('timeframe');
-        num_hits.innerHTML = `${item.num_hits} videos`;
+        num_hits.innerHTML = `${item.num_hits} of videos`;
 
         header.appendChild(topic_pill)
         header.appendChild(num_hits)
@@ -241,7 +241,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
-
 function openTab(evt, tabName) {
     var tabElement = document.getElementById(tabName);
 
