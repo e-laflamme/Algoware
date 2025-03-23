@@ -58,8 +58,6 @@ function getTopicCountsPromise() {
     });
 }
 
-let currSessionResults = {}; // Initialize the variable
-
 // ------------------------- SESSION CONTENT ------------------------
 // Listen for the message from contents.js
 let currSessionResults = {}; // Initialize the variable
