@@ -1,60 +1,49 @@
 function isYouTubeHomepage() {
     return location.hostname === "www.youtube.com" && location.pathname === "/";
-}
-
-async function extractVideoUrls() {
-    if (!isYouTubeHomepage()) {
-        console.log("Not on YouTube homepage, stopping execution.");
-        return;
-    }
-
+  }
+  
+  function extractVideoUrls() {
     let videoLinks = document.querySelectorAll("#video-title");
-    if (videoLinks.length === 0) {
-        console.log("No video links found yet, retrying...");
-        setTimeout(() => extractVideoUrls(), 2000);
-        return;
-    }
-
-    let urls = [...videoLinks].map(el => {
-        let anchor = el.closest('a');
-        return anchor ? anchor.href : null;
-    }).filter(url => url !== null);
-
+    let urls = [...videoLinks]
+      .map(el => el.closest("a")?.href)
+      .filter(url => url);
+  
     console.log("YouTube Homepage Video URLs:", urls);
-
-    if (urls.length > 0) {
-        try {
-            const response = await fetch("http://127.0.0.1:5000/predict", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({input: urls})
-            });
-
-            const data = await response.json();
-
-            if (data.prediction) {
-                console.log(`Prediction: ${data.prediction}`);
-            } else {
-                console.log("Error getting prediction.");
-            }
-        } catch (error) {
-            console.error("Error fetching prediction:", error);
-        }
+  
+    chrome.runtime.sendMessage({ action: "classifyVideos", urls: urls });
+  }
+  
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "predictionResult") {
+      const result = message.data;
+      console.log("📊 Topic Predictions:", result);
+      updateLocalCounts(result);
     }
-}
-
-window.addEventListener("load", () => {
+  });
+  
+  function updateLocalCounts(newCounts) {
+    chrome.storage.sync.get({ topicCounts: {} }, (data) => {
+      let updated = data.topicCounts || {};
+  
+      for (const topic in newCounts) {
+        updated[topic] = (updated[topic] || 0) + newCounts[topic];
+      }
+  
+      chrome.storage.sync.set({ topicCounts: updated }, () => {
+        console.log("🧠 Updated topic counts:", updated);
+      });
+    });
+  }
+  
+  window.addEventListener("load", () => {
     if (isYouTubeHomepage()) {
-        console.log("YouTube homepage detected, extracting URLs...");
-        setTimeout(() => extractVideoUrls(), 2000);
-    } else {
-        console.log("Not on YouTube homepage, script will not run.");
+      console.log("🏠 YouTube homepage detected, scanning...");
+      setTimeout(extractVideoUrls, 2000);
     }
-});
-
-
+  });
 
 // DATABASE STUFF
+// Local storage functions (unchanged)
 function saveComputation(data) {
     chrome.storage.sync.get({ computations: [] }, function (result) {
         let computations = result.computations || [];
@@ -77,3 +66,4 @@ function getComputations(callback) {
 }
 
 // To access use:  getComputations(console.log);
+getComputations(console.log);
