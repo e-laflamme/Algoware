@@ -3,7 +3,7 @@
  * @readonly
  * @enum {{name: string, hex: string}}
  */
-const Colors = Object.freeze({
+const affect = Object.freeze({
     POSITIVE:   { name: "positive", color: "#B8E6D0" },
     NEGATIVE:  { name: "negative", color: "#F9C6C6" },
     NEUTRAL: { name: "neutral", color: "#D8E6F3" }
