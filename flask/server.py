@@ -1,3 +1,4 @@
+import os
 import re
 import requests
 from flask import Flask, request, jsonify
@@ -6,6 +7,10 @@ from pytube import YouTube
 from youtube_transcript_api import YouTubeTranscriptApi
 from model import predict_topic
 from urllib.parse import urlparse, parse_qs
+from google.cloud import language_v1
+
+# ✅ Automatically load Google NLP key
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "flask/credentials/google_nlp_key.json"
 
 app = Flask(__name__)
 CORS(app)
@@ -59,27 +64,62 @@ def get_title_and_transcript(video_url):
 
     return title, transcript
 
+def get_sentiment_breakdown(text):
+    client = language_v1.LanguageServiceClient()
+    document = language_v1.Document(content=text, type_=language_v1.Document.Type.PLAIN_TEXT)
+    sentiment = client.analyze_sentiment(request={"document": document}).document_sentiment
+    score = sentiment.score
+
+    positive = max(score, 0)
+    negative = abs(min(score, 0))
+    neutral = 1 - (positive + negative)
+    total = positive + negative + neutral
+
+    return {
+        "positive": round((positive / total) * 100, 2),
+        "negative": round((negative / total) * 100, 2),
+        "neutral": round((neutral / total) * 100, 2)
+    }
+
 @app.route("/predict", methods=["POST"])
 def predict():
     urls = request.json.get("input", [])
     print(f"\n📥 Received {len(urls)} URLs")
 
-    topic_counts = {}
+    video_results = []
 
     for url in urls:
         title, transcript = get_title_and_transcript(url)
         if title and transcript:
             try:
                 topic = predict_topic(title, transcript)
-                topic_counts[topic] = topic_counts.get(topic, 0) + 1
                 print(f"✅ Predicted topic: {topic}")
-            except Exception as e:
-                print(f"❌ Model error on {url}: {e}")
-        else:
-            print(f"⚠️ Skipped due to missing data")
+                combined_text = f"{title}\n\n{transcript}"
+                sentiment = get_sentiment_breakdown(combined_text)
 
-    print(f"\n📤 Returning topic breakdown: {topic_counts}")
-    return jsonify({"prediction": topic_counts})
+                print(f"🧠 Sentiment for {title} → {sentiment}")
+                
+                video_results.append({
+                    "url": url,
+                    "title": title,
+                    "topic": topic,
+                    "sentiment": sentiment
+                })
+
+            except Exception as e:
+                print(f"❌ Error processing {url}: {e}")
+        else:
+            print(f"⚠️ Skipped due to missing title/transcript: {url}")
+
+    topic_counts = {}
+    for video in video_results:
+        topic = video["topic"]
+        topic_counts[topic] = topic_counts.get(topic, 0) + 1
+
+    return jsonify({
+        "prediction": topic_counts,
+        "results": video_results
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)

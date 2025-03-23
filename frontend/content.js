@@ -1,75 +1,77 @@
 function isYouTubeHomepage() {
-    return location.hostname === "www.youtube.com" && location.pathname === "/";
-  }
-  
-  function extractVideoUrls() {
-    let videoLinks = document.querySelectorAll("#video-title");
-    let urls = [...videoLinks]
-      .map(el => el.closest("a")?.href)
-      .filter(url => url);
-  
-    console.log("YouTube Homepage Video URLs:", urls);
-  
-    chrome.runtime.sendMessage({ action: "classifyVideos", urls: urls });
-  }
-  
-  chrome.runtime.onMessage.addListener((message) => {
-    if (message.action === "predictionResult") {
-      const result = message.data;
-        // Send the result to the script.js through message
-        chrome.runtime.sendMessage({
-            action: "updateSessionResults",
-            data: result
-        });
-      console.log("📊 Topic Predictions:", result);
-      updateLocalCounts(result);
-    }
-  });
-  
-  function updateLocalCounts(newCounts) {
-    chrome.storage.sync.get({ topicCounts: {} }, (data) => {
-      let updated = data.topicCounts || {};
-  
-      for (const topic in newCounts) {
-        updated[topic] = (updated[topic] || 0) + newCounts[topic];
-      }
-  
-      chrome.storage.sync.set({ topicCounts: updated }, () => {
-        console.log("🧠 Updated topic counts:", updated);
-      });
-    });
-  }
-  
-  window.addEventListener("load", () => {
-    if (isYouTubeHomepage()) {
-      console.log("🏠 YouTube homepage detected, scanning...");
-      setTimeout(extractVideoUrls, 2000);
-    }
-  });
+  return location.hostname === "www.youtube.com" && location.pathname === "/";
+}
 
-// DATABASE STUFF
-// Local storage functions (unchanged)
+function extractVideoUrls() {
+  let videoLinks = document.querySelectorAll("#video-title");
+  let urls = [...videoLinks]
+    .map(el => el.closest("a")?.href)
+    .filter(url => url)
+    .slice(0, 5); // ✅ Only send top 5 URLs
+
+  console.log("🔢 Limited YouTube Homepage Video URLs:", urls);
+
+  chrome.runtime.sendMessage({ action: "classifyVideos", urls: urls });
+}
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.action === "predictionResult") {
+    const result = message.data;
+
+    // ✅ Send the result to scripts.js
+    chrome.runtime.sendMessage({
+      action: "updateSessionResults",
+      data: result
+    });
+
+    console.log("📊 Topic Predictions:", result);
+    updateLocalCounts(result);
+  }
+});
+
+function updateLocalCounts(newCounts) {
+  chrome.storage.sync.get({ topicCounts: {} }, (data) => {
+    let updated = data.topicCounts || {};
+
+    for (const topic in newCounts) {
+      updated[topic] = (updated[topic] || 0) + newCounts[topic];
+    }
+
+    chrome.storage.sync.set({ topicCounts: updated }, () => {
+      console.log("🧠 Updated topic counts:", updated);
+    });
+  });
+}
+
+window.addEventListener("load", () => {
+  if (isYouTubeHomepage()) {
+    console.log("🏠 YouTube homepage detected, scanning...");
+    setTimeout(extractVideoUrls, 2000);
+  }
+});
+
+// ------------------ DATABASE STUFF (unchanged) ------------------
+
 function saveComputation(data) {
-    chrome.storage.sync.get({ computations: [] }, function (result) {
-        let computations = result.computations || [];
+  chrome.storage.sync.get({ computations: [] }, function (result) {
+    let computations = result.computations || [];
 
-        computations.push({
-            date: new Date().toISOString(),
-            result: data
-        });
-
-        chrome.storage.sync.set({ computations: computations }, function () {
-            console.log("Computation saved!");
-        });
+    computations.push({
+      date: new Date().toISOString(),
+      result: data
     });
+
+    chrome.storage.sync.set({ computations: computations }, function () {
+      console.log("💾 Computation saved!");
+    });
+  });
 }
 
 function getComputations(callback) {
-    chrome.storage.sync.get({ computations: [] }, function (result) {
-        callback(result.computations || []);
-    });
+  chrome.storage.sync.get({ computations: [] }, function (result) {
+    callback(result.computations || []);
+  });
 }
 
 // To access use:  getComputations(console.log);
 getComputations(console.log);
-
