@@ -111,11 +111,8 @@ function reloadSentimentBreakdown() {
         Object.entries(sentimentData).forEach(([topic, stats]) => {
             const count = stats.count || 1;
 
-            const rawPositive = (stats.positive_total / count) * 100;
-            const rawNegative = (stats.negative_total / count) * 100;
-
-            const avgPositive = Math.round(rawPositive);
-            const avgNegative = Math.round(rawNegative);
+            const avgPositive = parseFloat(stats.positive_total / count).toFixed(0);
+            const avgNegative = parseFloat(stats.negative_total / count).toFixed(0);
             const avgNeutral = Math.max(0, 100 - avgPositive - avgNegative);
 
             const item = {
